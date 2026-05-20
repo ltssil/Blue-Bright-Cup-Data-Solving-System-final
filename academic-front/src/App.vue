@@ -14,6 +14,8 @@
     </header>
 
     <main class="content" v-if="user">
+      <PerformancePanel />
+
       <template v-if="isAdmin">
         <ExcelUploader />
         <hr />
@@ -49,6 +51,7 @@ import FinalComposer from '@/components/FinalComposer.vue'
 import Login from '@/components/login.vue'
 import TeacherView from '@/components/TeacherView.vue'
 import StudentView from '@/components/StudentView.vue'
+import PerformancePanel from '@/components/PerformancePanel.vue'
 
 const user = ref(null)
 try {
