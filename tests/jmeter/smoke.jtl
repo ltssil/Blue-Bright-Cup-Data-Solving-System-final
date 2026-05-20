@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1779253107464,487,GET status,200,,TG 1-1,text,true,,355,134,1,1,http://localhost:8081/api/data-status,480,0,37
