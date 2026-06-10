@@ -12,10 +12,12 @@ import java.util.List;
 
 public class DBUtil {
     public final static String DRIVER = "com.mysql.cj.jdbc.Driver";
-    public final static String URL = "jdbc:mysql://localhost:3306/acadamiccompetition"
-            + "?useSSL=false"
-            + "&serverTimezone=Asia/Shanghai"
-            + "&characterEncoding=utf8";
+    public final static String URL =
+            "jdbc:mysql://localhost:3306/acadamiccompetition"
+                    + "?useSSL=false"
+                    + "&allowPublicKeyRetrieval=true"
+                    + "&serverTimezone=Asia/Shanghai"
+                    + "&characterEncoding=utf8";
     public final static String USER = "ltssil";
     public final static String PASS = "ltssilqcq";
     private static final HikariDataSource DATA_SOURCE;

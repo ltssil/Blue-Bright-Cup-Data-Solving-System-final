@@ -24,14 +24,17 @@ public class FinalReportOperation {
      */
     public List<Map<String, Object>> composeFinalRows(Integer year, String competitionName, String awardLevel, String major) {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT award_id, stuNo, stuName, major, stuGrade, stuClass, mentor, subject, awardRank, inFinal, awardYear, competitionName, awardLevel ");
-        sql.append("FROM vw_final_base ");
-        sql.append("WHERE COALESCE(stuName,'') <> '' ");
-        sql.append("AND COALESCE(stuName,'') NOT IN (SELECT COALESCE(stuName,'') FROM conflict) ");
+        sql.append("SELECT b.award_id, COALESCE(b.stuNo, s.stuNo) AS stuNo, b.stuName, b.major, b.stuGrade, b.stuClass, ");
+        sql.append("b.mentor, b.subject, b.awardRank, b.inFinal, b.awardYear, b.competitionName, b.awardLevel ");
+        sql.append("FROM vw_final_base b ");
+        sql.append("LEFT JOIN (SELECT stuName, MIN(stuNo) AS stuNo FROM students WHERE COALESCE(stuName,'') <> '' GROUP BY stuName) s ");
+        sql.append("ON COALESCE(s.stuName,'') = COALESCE(b.stuName,'') ");
+        sql.append("WHERE COALESCE(b.stuName,'') <> '' ");
+        sql.append("AND COALESCE(b.stuName,'') NOT IN (SELECT COALESCE(stuName,'') FROM conflict) ");
 
         List<Object> params = new ArrayList<>();
         if (major != null && !major.trim().isEmpty()) {
-            sql.append(" AND COALESCE(major,'') = ? ");
+            sql.append(" AND COALESCE(b.major,'') = ? ");
             params.add(major.trim());
         }
 
@@ -179,9 +182,11 @@ public class FinalReportOperation {
             StringBuilder insertSql = new StringBuilder();
             insertSql.append("INSERT INTO finalreport (year, competitionName, awardLevel, subject, award, stuName, major, stuGrade, stuClass, mentor, inFinal, stuNo, source_award_id) ");
             insertSql.append("SELECT COALESCE(?, awardYear) AS year, COALESCE(NULLIF(?,''), competitionName) AS competitionName, COALESCE(NULLIF(?,''), awardLevel) AS awardLevel, ");
-            insertSql.append("subject, awardRank AS award, stuName, major, stuGrade, stuClass, mentor, inFinal, stuNo, award_id ");
-            insertSql.append("FROM vw_final_base ");
-            insertSql.append("WHERE COALESCE(stuName,'') <> '' AND COALESCE(stuName,'') NOT IN (SELECT COALESCE(stuName,'') FROM conflict) ");
+            insertSql.append("b.subject, b.awardRank AS award, b.stuName, b.major, b.stuGrade, b.stuClass, b.mentor, b.inFinal, COALESCE(b.stuNo, s.stuNo), b.award_id ");
+            insertSql.append("FROM vw_final_base b ");
+            insertSql.append("LEFT JOIN (SELECT stuName, MIN(stuNo) AS stuNo FROM students WHERE COALESCE(stuName,'') <> '' GROUP BY stuName) s ");
+            insertSql.append("ON COALESCE(s.stuName,'') = COALESCE(b.stuName,'') ");
+            insertSql.append("WHERE COALESCE(b.stuName,'') <> '' AND COALESCE(b.stuName,'') NOT IN (SELECT COALESCE(stuName,'') FROM conflict) ");
 
             List<Object> insertParams = new ArrayList<>();
             insertParams.add(year); // param1 COALESCE(?, awardYear)
@@ -189,7 +194,7 @@ public class FinalReportOperation {
             insertParams.add(awardLevel == null ? "" : awardLevel); // param3
 
             if (major != null && !major.trim().isEmpty()) {
-                insertSql.append(" AND COALESCE(major,'') = ? ");
+                insertSql.append(" AND COALESCE(b.major,'') = ? ");
                 insertParams.add(major.trim());
             }
 
@@ -262,7 +267,7 @@ public class FinalReportOperation {
             Sheet sheet = wb.createSheet("最终表");
 
             String[] headers = new String[] {
-                    "年份", "获奖级别", "比赛名", "科目名称", "奖项等级", "学生名", "专业", "年级", "班级", "指导老师", "是否进入决赛"
+                    "年份", "获奖级别", "比赛名", "科目名称", "奖项等级", "学生姓名", "学号", "专业", "年级", "班级", "指导老师", "是否进入决赛"
             };
 
             // header style
@@ -329,23 +334,28 @@ public class FinalReportOperation {
 
                 Cell c6 = rr.createCell(cidx++);
                 c6.setCellStyle(bodyStyle);
-                CellValueOperation.setCellValue(c6, row.get("major"));
+                Object value = row.get("stuNo");
+                c6.setCellValue(value == null ? "" : String.valueOf(value));
 
                 Cell c7 = rr.createCell(cidx++);
                 c7.setCellStyle(bodyStyle);
-                CellValueOperation.setCellValue(c7, row.get("stuGrade"));
+                CellValueOperation.setCellValue(c7, row.get("major"));
 
                 Cell c8 = rr.createCell(cidx++);
                 c8.setCellStyle(bodyStyle);
-                CellValueOperation.setCellValue(c8, row.get("stuClass"));
+                CellValueOperation.setCellValue(c8, row.get("stuGrade"));
 
                 Cell c9 = rr.createCell(cidx++);
                 c9.setCellStyle(bodyStyle);
-                CellValueOperation.setCellValue(c9, row.get("mentor"));
+                CellValueOperation.setCellValue(c9, row.get("stuClass"));
 
                 Cell c10 = rr.createCell(cidx++);
                 c10.setCellStyle(bodyStyle);
-                CellValueOperation.setCellValue(c10, row.get("inFinal"));
+                CellValueOperation.setCellValue(c10, row.get("mentor"));
+
+                Cell c11 = rr.createCell(cidx++);
+                c11.setCellStyle(bodyStyle);
+                CellValueOperation.setCellValue(c11, row.get("inFinal"));
             }
 
             sheet.createFreezePane(0, 1);
@@ -355,7 +365,7 @@ public class FinalReportOperation {
                     sheet.autoSizeColumn(i);
                     int current = sheet.getColumnWidth(i);
                     int minWidth = 12 * 256;
-                    if (i == 2 || i == 3 || i == 9) minWidth = 28 * 256;
+                    if (i == 2 || i == 3 || i == 10) minWidth = 28 * 256;
                     if (i == 5) minWidth = 16 * 256;
                     if (current < minWidth) sheet.setColumnWidth(i, minWidth);
                     int maxWidth = 80 * 256;

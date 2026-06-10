@@ -45,7 +45,7 @@
         <thead>
         <tr>
           <th>年份</th><th>获奖级别</th><th>比赛名</th><th>科目</th><th>奖项等级</th>
-          <th>学生名</th><th>专业</th><th>年级</th><th>班级</th><th>指导老师</th><th>是否进入决赛</th>
+          <th>学生名</th><th>学号</th><th>专业</th><th>年级</th><th>班级</th><th>指导老师</th><th>是否进入决赛</th>
         </tr>
         <!-- 分组标签 -->
         </thead>
@@ -58,6 +58,7 @@
           <td>{{ row.subject || '' }}</td>
           <td>{{ row.award || '' }}</td>
           <td>{{ row.stuName || '' }}</td>
+          <td>{{ row.stuNo || '' }}</td>
           <td>{{ row.major || '' }}</td>
           <td>{{ row.stuGrade || '' }}</td>
           <td>{{ row.stuClass || '' }}</td>
@@ -81,7 +82,7 @@
       <table class="preview-table">
         <thead>
         <tr>
-          <th>年份</th><th>获奖级别</th><th>比赛名</th><th>科目</th><th>奖项</th><th>学生名</th>
+          <th>年份</th><th>获奖级别</th><th>比赛名</th><th>科目</th><th>奖项</th><th>学生名</th><th>学号</th>
           <th>专业</th><th>年级</th><th>班级</th><th>指导老师</th>
         </tr>
         </thead>
@@ -93,6 +94,7 @@
           <td>{{ r.subject }}</td>
           <td>{{ r.award }}</td>
           <td>{{ r.stuName }}</td>
+          <td>{{ r.stuNo }}</td>
           <td>{{ r.major }}</td>
           <td>{{ r.stuGrade }}</td>
           <td>{{ r.stuClass }}</td>

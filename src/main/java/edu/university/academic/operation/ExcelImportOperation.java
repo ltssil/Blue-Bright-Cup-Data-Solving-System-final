@@ -193,7 +193,7 @@ public class ExcelImportOperation {
                     String stuName = pickFirst(headerIndexMap, row, "学生姓名", "姓名", "stuName");
                     String department = pickFirst(headerIndexMap, row, "院系", "department");
                     String subject = pickFirst(headerIndexMap, row, "科目名称", "科目", "subject");
-                    String mentor = pickFirst(headerIndexMap, row, "指导老师", "指导教师", "mentor");
+                    String mentor = pickFirst(headerIndexMap, row, "指导老师", "指导教师", "导师" , "mentor");
 
                     if (isBlank(stuNo) || isBlank(subject)) {
                         errors.add("第 " + (r + 1) + " 行：学号或科目为空，跳过");
