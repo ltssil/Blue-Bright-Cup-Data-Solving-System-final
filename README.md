@@ -51,7 +51,7 @@
 | Vite | 前端构建工具 |
 | Gradle | 项目构建与依赖管理 |
 
-后端 Gradle 配置使用 Java 21 Toolchain，并引入 Spring Boot 3.2.1、MySQL Connector/J、Apache POI 等依赖。fileciteturn11file0 前端项目使用 Vue 3、Vue Router、Axios 和 Vite。fileciteturn20file0
+后端使用 Java 21，并引入 Spring Boot 3.2.1、Spring Web、Spring JDBC、MySQL Connector/J、Apache POI 和 Lombok 等依赖；前端使用 Vue 3、Vue Router、Axios 和 Vite。
 
 ## 📁 项目结构
 
@@ -77,7 +77,7 @@ Blue-Bright-Cup-Data-Solving-System-final/
 └── README.md
 ```
 
-项目根模块名称为 `academicCompetition`。fileciteturn12file0
+项目根模块名称为 `academicCompetition`。
 
 ## 🚀 快速开始
 
@@ -90,8 +90,6 @@ Blue-Bright-Cup-Data-Solving-System-final/
 - MySQL
 - Node.js 20.19+ 或 22.12+
 - npm
-
-前端 `package.json` 当前声明 Node.js 版本要求为 `^20.19.0 || >=22.12.0`。fileciteturn20file0
 
 ### 2. 启动后端
 
@@ -153,8 +151,6 @@ npm run build
 ```bash
 npm run preview
 ```
-
-这些命令与当前前端 `package.json` 中定义的脚本一致。fileciteturn20file0
 
 ## 📊 数据处理
 
